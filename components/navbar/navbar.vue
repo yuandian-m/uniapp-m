@@ -13,6 +13,7 @@
 					<!-- 非搜索页显示 -->
 					<view class="navbar-search_icon">
 						<uni-icons type="search" size="16" color="#999"></uni-icons>
+						<!-- <text class="iconfont icon-search"></text> 自定义图标，通过阿里icon -->
 					</view>
 					<view class="navbar-search_text">uni-app、vue</view>
 				</view>
@@ -93,7 +94,7 @@
 </script>
 
 <style lang="scss">
-	// @import '../../common/css/icons.css';
+	@import '../../common/css/icons.css';
 
 	.navbar {
 		.navbar-fixed {

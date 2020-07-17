@@ -14,7 +14,11 @@
 			"path": "pages/tabbar/my/my",
 			"style": {}
 		}
-	],
+	    ,{
+            "path" : "components/tab/tab",
+            "style" : {}
+        }
+    ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
