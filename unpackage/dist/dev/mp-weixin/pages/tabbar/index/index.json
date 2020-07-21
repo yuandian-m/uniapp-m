@@ -1,9 +1,11 @@
 {
   "navigationStyle": "custom",
   "navigationBarTextStyle": "white",
-  "navigationBarTitleText": "mm",
+  "navigationBarTitleText": "uni-app练习",
   "usingComponents": {
     "navbar": "/components/navbar/navbar",
-    "tab": "/components/tab/tab"
+    "tab": "/components/tab/tab",
+    "list-scoll": "/components/list-scoll/list-scoll",
+    "list-card": "/components/list-card/list-card"
   }
 }

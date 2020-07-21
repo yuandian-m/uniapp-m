@@ -4,10 +4,8 @@
 		<navbar></navbar>
 		<tab :list="tabList" @tab="tabClick"></tab>
 		<view class="content-list">
-			<list-scoll>
-				<view v-for="(item,index) in 100" :key="index">
-					{{item}}
-				</view>
+			<list-scoll class="list_scoll">
+				<list-card v-for="item in 10"></list-card>
 			</list-scoll>
 		</view>
 
@@ -54,13 +52,19 @@
 	}
 
 	.content {
-		disp: flex;
+		display: flex;
 		flex-direction: column;
 		flex: 1;
 		overflow: hidden;
 		.content-list {
 			flex: 1;
 			box-sizing: border-box;
+			overflow: hidden;
+			.list_scoll{
+				height: 100%;
+				display: flex;
+				flex-direction: column;
+			}
 		}
 	}
 </style>
