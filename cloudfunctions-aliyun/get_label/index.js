@@ -6,7 +6,6 @@ let label = await db.collection('label').get()
   return {
 	  code:200,
 	  msg:"成功",
-	  data:label.data
-	  
+	  data:label.data  
   }
 };
