@@ -2,13 +2,10 @@
 	<view class="content">
 		<!-- 自定义导航栏 -->
 		<navbar></navbar>
-		<tab :list="tabList" @tab="tabClick"></tab>
+		<tab :list="tabList" @tab="tabClick" :swiperIndex="swiperIndex"></tab>
 		<view class="content-list">
-			<list-scoll class="list_scoll">
-				<list-card v-for="item in 10"></list-card>
-			</list-scoll>
+				<list :swiperList="tabList" @getSwiper="getSwiper" :tabSwiper="tabSwiper"></list>
 		</view>
-
 	</view>
 </template>
 
@@ -16,7 +13,9 @@
 	export default {
 		data() {
 			return {
-				tabList: []
+				tabList: [],
+				swiperIndex:0,
+				tabSwiper:0
 			}
 		},
 		onLoad() {
@@ -35,11 +34,20 @@
 					const {
 						data
 					} = res;
+
 					this.tabList = data
+					this.tabList.unshift(
+					{
+						name:"全部"
+					})
 				})
 			},
 			tabClick(data) {
-				console.log(data)
+				// console.log(data)
+				this.tabSwiper=data.index
+			},
+			getSwiper(data){
+				this.swiperIndex=data
 			}
 		}
 	}
