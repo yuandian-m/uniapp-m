@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<!-- 自定义导航栏 -->
-		<navbar></navbar>
+		<navbar ></navbar>
 		<tab :list="tabList" @tab="tabClick" :swiperIndex="swiperIndex"></tab>
 		<view class="content-list">
 				<list :swiperList="tabList" @getSwiper="getSwiper" :tabSwiper="tabSwiper"></list>
@@ -19,6 +19,12 @@
 			}
 		},
 		onLoad() {
+			uni.$on("labelchange",res=>{
+				tabList= []
+				swiperIndex=0
+				tabSwiper=0
+				this.getTabList()
+			})
 			this.getTabList()
 		},
 		methods: {
@@ -30,12 +36,13 @@
 				// }) => {
 				// 	this.tabList = result.data
 				// })
-				this.$api.get_table().then(res => {
+				this.$api.get_label().then(res => {
 					const {
 						data
 					} = res;
 
 					this.tabList = data
+					console.log(data)
 					this.tabList.unshift(
 					{
 						name:"全部"

@@ -13,7 +13,6 @@
 					<!-- 非搜索页显示 -->
 					<view class="navbar-search_icon">
 						<uni-icons type="search" size="16" color="#999"></uni-icons>
-						<!-- <text class="iconfont icon-search"></text> 自定义图标，通过阿里icon -->
 					</view>
 					<view class="navbar-search_text">uni-app、vue</view>
 				</view>
@@ -62,12 +61,10 @@
 			// #ifndef H5 || APP-PLUS || MP-ALIPAY
 			// 获取胶囊的位置
 			const menuButtonInfo = uni.getMenuButtonBoundingClientRect()
-			console.log(menuButtonInfo);
 			// (胶囊底部高度 - 状态栏的高度) + (胶囊顶部高度 - 状态栏内的高度) = 导航栏的高度
 			this.navBarHeight = (menuButtonInfo.bottom - info.statusBarHeight) + (menuButtonInfo.top - info.statusBarHeight)
 			this.windowWidth = menuButtonInfo.left
 			// #endif
-
 		},
 		methods: {
 			back(){
@@ -77,6 +74,7 @@
 				})
 			},
 			open() {
+				console.log(this.isSearch)
 				if (this.isSearch) return
 				uni.navigateTo({
 					url: "/pages/home-search/home-search"

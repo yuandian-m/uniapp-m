@@ -3,8 +3,8 @@
 		{
 			"path": "pages/tabbar/index/index",
 			"style": {
-				"navigationStyle":"custom",
-				"navigationBarTextStyle":"white",
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white",
 				"navigationBarTitleText": "uni-app练习"
 			}
 		}, {
@@ -14,7 +14,17 @@
 			"path": "pages/tabbar/my/my",
 			"style": {}
 		}
-	   
+
+		, {
+			"path": "pages/home-search/home-search",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}
+	    ,{
+            "path" : "pages/home-label/home-label",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
