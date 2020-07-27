@@ -5,7 +5,7 @@
 			<view class="listcard-image">
 				<image :src="cardInfo.cover[0]" mode="aspectFill"></image>
 			</view>
-			<view class="listcard-content">
+			<view class="listcard-content" >
 				<view class="listcard-content__title">
 					<text>{{cardInfo.title}}</text>
 					<likes :item="cardInfo"></likes>
@@ -92,7 +92,8 @@
 				console.log('打开详情页面',params);
 				// 传参注意长度
 				uni.navigateTo({
-					url:'/pages/home-detail/home-detail?params='+JSON.stringify(params)
+					// url:'/pages/home-detail/home-detail?params='+JSON.stringify(params)
+					url:`/pages/home-detail/home-detail?params=${JSON.stringify(params)}`
 				})
 			}
 		}

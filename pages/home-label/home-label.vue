@@ -91,7 +91,7 @@
 							title: "更新成功",
 							icon: "none"
 						})
-						uni.$emit('labelchange')
+						uni.$emit('labelChange')
 					}
 				})
 			}

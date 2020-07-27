@@ -3,7 +3,6 @@
 		<swiper-item v-for="(item ,index) in tab" :key="index" class="swiper-item">
 			<list-item :list="listCatchData[index]" :load="load[index]" @loadmore="loadmore"></list-item>
 		</swiper-item>
-
 	</swiper>
 </template>
 

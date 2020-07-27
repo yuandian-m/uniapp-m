@@ -1,85 +1,85 @@
 <template>
-	<view class="content">
+	<view class="home">
 		<!-- 自定义导航栏 -->
-		<navbar ></navbar>
-		<tab :list="tabList" @tab="tabClick" :swiperIndex="swiperIndex"></tab>
-		<view class="content-list">
-				<list :swiperList="tabList" @getSwiper="getSwiper" :tabSwiper="tabSwiper"></list>
+		<navbar></navbar>
+		<tab :list="tabList" :tabIndex="tabIndex"  @tab="tab"></tab>
+		<view class="home-list">
+			<list :tab="tabList" :activeIndex="activeIndex" @change="change"></list>
 		</view>
 	</view>
 </template>
 
 <script>
+	import {mapState} from 'vuex'
+	// easyCom components/组件名/组件名.vue 局部引入
 	export default {
 		data() {
 			return {
+				title: 'Hello',
 				tabList: [],
-				swiperIndex:0,
-				tabSwiper:0
+				tabIndex:0,
+				activeIndex:0
+			}
+		},
+		computed:{
+			...mapState(['userinfo'])
+		},
+		watch:{
+			userinfo(newVal){
+				this.getLabel()
 			}
 		},
 		onLoad() {
-			uni.$on("labelchange",res=>{
-				tabList= []
-				swiperIndex=0
-				tabSwiper=0
-				this.getTabList()
+			uni.$on('labelChange',(res)=>{
+				this.tabList = []
+				this.tabIndex = 0
+				this.activeIndex = 0
+				this.getLabel()
 			})
-			this.getTabList()
+			this.getLabel()
 		},
 		methods: {
-			getTabList() {
-				// uniCloud.callFunction({
-				// 	name: "get_label"
-				// }).then(({
-				// 	result
-				// }) => {
-				// 	this.tabList = result.data
-				// })
-				this.$api.get_label().then(res => {
+			change(current){
+				this.tabIndex = current
+				this.activeIndex = current
+				// console.log('当前swiper的值：',current);
+			},
+			tab({data,index}){
+				console.log(data,index);
+				this.activeIndex = index
+			},
+			getLabel() {
+				// 调用云函数方法
+				this.$api.get_label().then((res) => {
 					const {
 						data
-					} = res;
-
-					this.tabList = data
-					console.log(data)
-					this.tabList.unshift(
-					{
-						name:"全部"
+					} = res
+			
+					data.unshift({
+						name:'全部'
 					})
+					this.tabList = data
+						console.log(this.tabList);
 				})
-			},
-			tabClick(data) {
-				// console.log(data)
-				this.tabSwiper=data.index
-			},
-			getSwiper(data){
-				this.swiperIndex=data
+
 			}
 		}
 	}
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 	page {
 		height: 100%;
 		display: flex;
 	}
-
-	.content {
+	.home  {
 		display: flex;
 		flex-direction: column;
 		flex: 1;
 		overflow: hidden;
-		.content-list {
-			flex: 1;
+		.home-list {
+			flex:1;
 			box-sizing: border-box;
-			overflow: hidden;
-			.list_scoll{
-				height: 100%;
-				display: flex;
-				flex-direction: column;
-			}
 		}
 	}
 </style>

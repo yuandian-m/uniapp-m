@@ -2,8 +2,8 @@
 	<view class="tab">
 		<scroll-view class="tab-scroll" scroll-x>
 			<view class="tab-scroll__box">
-				<view v-for="(item, index) in list" :key="index" class="tab-scroll__item" :class="{active:activeIndex==index}"
-				 @click="changeTabColor(item, index)">{{item.name}}</view>
+				<view v-for="(item, index) in list" :key="index" class="tab-scroll__item" :class="{active:activeIndex === index}"
+				 @click="clickTab(item, index)">{{item.name}}</view>
 			</view>
 		</scroll-view>
 		<view class="tab-icons" @click="open">
@@ -21,16 +21,14 @@
 					return []
 				}
 			},
-			swiperIndex: {
+			tabIndex: {
 				type: Number,
-				default () {
-					return 0
-				}
+				default: 0
 			}
 		},
 		// 可以监听 data props 值的变化
 		watch: {
-			swiperIndex(newVal) {
+			tabIndex(newVal) {
 				this.activeIndex = newVal
 			}
 		},
@@ -40,7 +38,8 @@
 			};
 		},
 		methods: {
-			changeTabColor(item, index) {
+			clickTab(item, index) {
+				// console.log(item,index);
 				this.activeIndex = index
 				this.$emit('tab', {
 					data: item,
@@ -49,7 +48,7 @@
 			},
 			open(){
 				uni.navigateTo({
-					url:'/pages/home-label/home-label'
+					url:"/pages/home-label/home-label"
 				})
 			}
 		}
@@ -85,6 +84,21 @@
 					&.active {
 						color: $mk-base-color;
 					}
+				}
+			}
+
+			.tab-scroll__box {
+				display: flex;
+				align-items: center;
+				flex-wrap: nowrap;
+				height: 45px;
+				box-sizing: border-box;
+
+				.tab-scroll__item {
+					flex-shrink: 0;
+					padding: 0 10px;
+					color: #333;
+					font-size: 14px;
 				}
 			}
 		}
