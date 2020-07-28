@@ -75,13 +75,13 @@
 						loading: 'loading'
 					}
 				}
-				console.log('当前的页数',this.load[current].page);
+			
 				this.$api.get_list({
 					name: this.tab[current].name,
 					page: this.load[current].page,
 					pageSize: this.pageSize
 				}).then(res => {
-					console.log(res);
+				   console.log(res)
 					const {
 						data
 					} = res
@@ -98,7 +98,7 @@
 					oldList.push(...data)
 					// 懒加载
 					this.$set(this.listCatchData, current, oldList)
-					console.log(this.listCatchData)
+
 				})
 			}
 		}

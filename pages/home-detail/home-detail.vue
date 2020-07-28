@@ -17,17 +17,16 @@
 					<text>{{formData.thumbs_up_count}} 赞</text>
 				</view>
 			</view>
-			<!-- <button class="detail-header__button" type="default" @click="follow(formData.author.id)">{{formData.is_author_like?'取消关注':'关注'}}</button> -->
+			<button class="detail-header__button" type="default" @click="follow(formData.author.id)">{{formData.is_author_like?'取消关注':'关注'}}</button>
 		</view>
 		<view class="detail-content">
 			<view class="detail-html">
 				<u-parse :content="formData.content" :noData="noData"></u-parse>
-				<!-- {{formData.content}} -->
 			</view>
 			<view class="detail-comment">
 				<view class="comment-title">最新评论</view>
 				<view class="comment-content" v-for="item in commentsList" :key="item.comment_id">
-					<comments-box :comments="item"></comments-box>
+					<comments-box :comments="item" @reply="reply"></comments-box>
 				</view>
 			</view>
 		</view>
@@ -41,10 +40,10 @@
 					<uni-icons type="chat" size="22" color="#F07373"></uni-icons>
 				</view>
 				<view class="detail-bottom__icons-box" @click="likeTap(formData._id)">
-					<uni-icons type="heart" size="22" color="#F07373"></uni-icons>
+					<uni-icons :type="formData.is_like?'heart-filled':'heart'" size="22" color="#F07373"></uni-icons>
 				</view>
 				<view class="detail-bottom__icons-box" @click="thumbsup(formData._id)">
-					<uni-icons type="hand-thumbsup" size="22" color="#F07373"></uni-icons>
+					<uni-icons :type="formData.is_thumbs_up?'hand-thumbsup-filled':'hand-thumbsup' " size="22" color="#F07373"></uni-icons>
 				</view>
 			</view>
 		</view>
@@ -56,57 +55,147 @@
 	import uParse from '@/components/gaoyia-parse/parse.vue'
 
 	export default {
-		components: {
+		components:{
 			uParse
 		},
 		data() {
 			return {
 				formData: {},
-				noData: '<p style="text-align:center;color:#666">详情加载中...</p>',
-               
+				noData:'<p style="text-align:center;color:#666">详情加载中...</p>',
+				commentsList:[],
+				replyFormData:{},
+				showPopup:false
 			}
 		},
 		onLoad(query) {
 			this.formData = JSON.parse(query.params)
-			this.getDetailList()
+			this.getDetail()
+			this.getComments()
 		},
 		methods: {
-			getDetailList() {
-				this.$api.get_detail({
-					article_id: this.formData.article_id
-				}).then(res => {
-					const {
-						data
-					} = res
-					this.formData = data
+			/**
+			 * 打开评论列表
+			 */
+			open(){
+				uni.navigateTo({
+					url:'../detail-comments/detail-comments?id='+this.formData._id
 				})
 			},
+			// 点赞
+			thumbsup(article_id){
+				this.setUpdateThumbs(article_id)
+			},
+			// 收藏
+			likeTap(article_id){
+				console.log('收藏文章');
+				this.setUpadteLike(article_id)
+			},
+			// 关注
+			follow(author_id){
+				console.log('关注');
+				this.setUpdateAuhtor(author_id)
+			},
 			// 打开评论发布窗口
-			openComment() {
+			openComment(){
 				this.$refs.popup.open()
 			},
 			// 关闭弹窗
-			close() {
+			close(){
 				this.$refs.popup.close()
 			},
 			// 发布
-			submit(content) {
-				this.setUpdateComment({
-					content,
-					...this.replyFormData
-				})
+			submit(content){
+				this.setUpdateComment({content,...this.replyFormData})
 			},
-		    setUpdateComment(content){
+			reply(e){
+				this.replyFormData = {
+					"comment_id":e.comments.comment_id,
+					"is_reply": e.is_reply
+				}
+				if(e.comments.reply_id){
+					this.replyFormData.reply_id = e.comments.reply_id
+				}
+				console.log(this.replyFormData);
+				this.openComment()
+			},
+			setUpdateComment(content){
+				const formdata ={
+					article_id:this.formData._id,
+					...content
+				}
+				// console.log(formdata);
 				uni.showLoading()
-				this.$api.update_comment({
-					   article_id:this.formData._id,
-					   content
-				}).then(res=>{
-					console.log(res)
+				this.$api.update_comment(formdata).then((res)=>{
+					console.log(res);
 					uni.hideLoading()
 					uni.showToast({
-						tite:'发布成功',
+						title:'评论发布成功'
+					})
+					this.getComments()
+					this.close()
+					this.replyFormData = {}
+				})
+			},
+			// 获取详情信息
+			getDetail() {
+				this.$api.get_detail({
+					article_id: this.formData._id
+				}).then((res) => {
+					const {data} = res
+					this.formData = data
+					console.log(res);
+				})
+			},
+			// 请求评论内容
+			getComments(){
+				this.$api.get_comments({
+					article_id: this.formData._id
+				}).then(res=>{
+					console.log(res);
+					const {data} = res
+					this.commentsList = data
+				})
+			},
+			// 关注作者
+			setUpdateAuhtor(author_id){
+				uni.showLoading()
+				this.$api.update_author({
+					author_id
+				}).then(res=>{
+					uni.hideLoading()
+					this.formData.is_author_like = !this.formData.is_author_like
+					uni.showToast({
+						title:this.formData.is_author_like?'关注作者成功':'取消关注作者',
 						icon:'none'
+					})
+				})
+			},
+			// 收藏文章 
+			setUpadteLike(article_id){
+				uni.showLoading()
+				this.$api.update_like({
+					article_id
+				}).then(res=>{
+					uni.hideLoading()
+					this.formData.is_like = !this.formData.is_like
+					uni.$emit('update_article')
+					uni.showToast({
+						title:this.formData.is_like ?'收藏成功':'取消收藏',
+						icon:'none'
+					})
+					console.log('收藏成功');
+				})
+			},
+			setUpdateThumbs(article_id){
+				uni.showLoading()
+				this.$api.update_thumbsup({
+					article_id
+				}).then(res=>{
+					uni.hideLoading()
+					this.formData.is_thumbs_up = true
+					this.formData.thumbs_up_count++
+					uni.showToast({
+						title:res.msg
 					})
 				})
 			}
@@ -167,7 +256,6 @@
 				}
 			}
 		}
-
 		.detail-header__button {
 			flex-shrink: 0;
 			height: 30px;
@@ -180,21 +268,17 @@
 	.detail-content {
 		margin-top: 20px;
 		min-height: 500px;
-
 		.detail-html {
-			padding: 0 15px;
+			padding:0 15px;
 		}
-
 		.detail-comment {
 			margin-top: 30px;
-
 			.comment-title {
 				padding: 10px 15px;
 				font-size: 14px;
 				color: #666;
 				border-bottom: 1px #f5f5ff solid;
 			}
-
 			.comment-content {
 				padding: 0 15px;
 				border-top: 1px #eee solid;
@@ -245,4 +329,6 @@
 			}
 		}
 	}
+	
+
 </style>

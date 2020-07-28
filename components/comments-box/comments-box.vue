@@ -5,33 +5,33 @@
 				<image :src="comments.author.avatar" mode="aspectFill"></image>
 			</view>
 			<view class="comments-header__info">
-				<view  class="title">{{comments.author.author_name}}</view>
-				<view class="title">{{comments.author.author_name}} <text class="reply-text">回复</text>{{comments.to}}</view>
+				<view v-if="!comments.is_reply" class="title">{{comments.author.author_name}}</view>
+				<view v-else class="title">{{comments.author.author_name}} <text class="reply-text">回复</text>{{comments.to}}</view>
 				<view>{{comments.create_time | formatTime}}</view>
 			</view>
 		</view>
 		<view class="comments-content">
-			<!-- <view>{{comments.comment_content}}</view>
+			<view>{{comments.comment_content}}</view>
 			<view class="comments-info">
 				<view class="comments-button" @click="commentsReply({comments:comments,is_reply:reply})">回复</view>
 			</view>
 			<view class="comments-reply" v-for="item in comments.replys" :key="item.comment_id">
 				<comments-box :reply="true" :comments="item" @reply="commentsReply"></comments-box>
-			</view> -->
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
-	// import commentsBox from '@/components/comments-box/comments-box.vue'
-	// import {
-	// 	parseTime
-	// } from '@/utils/index.js'
+	import commentsBox from '@/components/comments-box/comments-box.vue'
+	import {
+		parseTime
+	} from '@/utils/index.js'
 	export default {
-		// name: "comments-box",
-		// components: {
-		// 	commentsBox
-		// },
+		name: "comments-box",
+		components: {
+			commentsBox
+		},
 		props: {
 			comments: {
 				type: Object,
@@ -39,31 +39,31 @@
 					return {}
 				}
 			},
-			// reply: {
-			// 	type: Boolean,
-			// 	default: false
-			// }
+			reply: {
+				type: Boolean,
+				default: false
+			}
 		},
-		// filters: {
-		// 	formatTime(time) {
-		// 		return parseTime(time)
-		// 	}
-		// },
+		filters: {
+			formatTime(time) {
+				return parseTime(time)
+			}
+		},
 		data() {
 			return {
 
 			};
 		},
 		methods: {
-			// commentsReply(comment) {
-			// 	// 为了区分 主回复，还是子回复
-			// 	if (comment.is_reply) {
-			// 		comment.comments.reply_id = comment.comments.comment_id
-			// 		comment.comments.comment_id = this.comments.comment_id
-			// 	}
-			// 	// console.log(comment);
-			// 	this.$emit('reply', comment)
-			// }
+			commentsReply(comment) {
+				// 为了区分 主回复，还是子回复
+				if (comment.is_reply) {
+					comment.comments.reply_id = comment.comments.comment_id
+					comment.comments.comment_id = this.comments.comment_id
+				}
+				// console.log(comment);
+				this.$emit('reply', comment)
+			}
 		}
 	}
 </script>

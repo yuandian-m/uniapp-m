@@ -10,7 +10,6 @@
 </template>
 
 <script>
-	import {mapState} from 'vuex'
 	// easyCom components/组件名/组件名.vue 局部引入
 	export default {
 		data() {
@@ -19,14 +18,6 @@
 				tabList: [],
 				tabIndex:0,
 				activeIndex:0
-			}
-		},
-		computed:{
-			...mapState(['userinfo'])
-		},
-		watch:{
-			userinfo(newVal){
-				this.getLabel()
 			}
 		},
 		onLoad() {
@@ -54,12 +45,12 @@
 					const {
 						data
 					} = res
-			
+					console.log('标签 ',data);
 					data.unshift({
 						name:'全部'
 					})
 					this.tabList = data
-						console.log(this.tabList);
+					// 	console.log(this.tabList);
 				})
 
 			}

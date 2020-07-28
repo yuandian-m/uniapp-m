@@ -96,6 +96,9 @@
 					url:`/pages/home-detail/home-detail?params=${JSON.stringify(params)}`
 				})
 			}
+		},
+		mounted() {
+			console.log(this.cardInfo)
 		}
 		
 	}
